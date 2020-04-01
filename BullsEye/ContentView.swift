@@ -1,6 +1,7 @@
 //
 //  ContentView.swift
 //  BullsEye
+//  version 1.0
 //
 //  Created by Kiryl Beliauski on 3/29/20.
 //  Copyright © 2020 Kiryl Beliauski. All rights reserved.
