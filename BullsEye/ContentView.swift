@@ -13,9 +13,13 @@ struct ContentView: View {
     
     //properties
     //==========
+    
+    //User interface views
     @State var alertIsVisible = false
     @State var sliderValue = 50.0
     @State var target = Int.random(in: 1...100)
+    @State var score = 0
+    @State var round = 1
     
     var sliderValueRounded: Int {
         Int(self.sliderValue.rounded())
@@ -23,7 +27,7 @@ struct ContentView: View {
     
     //User interface content and layout
     var body: some View {
-        //User interface views
+        
         VStack {
             Spacer()
             
@@ -54,7 +58,11 @@ struct ContentView: View {
             .alert(isPresented: self.$alertIsVisible) {
                 Alert(title: Text("Hello there!"),
                       message: Text(self.scoringMessage()),
-                      dismissButton: .default(Text("Awesome!")))
+                      dismissButton: .default(Text("Awesome!")) {
+                        self.score += self.pointsForCurrentRound()
+                        self.target = Int.random(in: 1...100)
+                    }
+                )
             }
             
             Spacer()
@@ -66,7 +74,7 @@ struct ContentView: View {
                 }
                 Spacer()
                 Text("Score:")
-                Text("999999")
+                Text("\(self.score)")
                 
                 Spacer()
                 Text("Round:")
@@ -83,16 +91,9 @@ struct ContentView: View {
     
     //Methods
     func pointsForCurrentRound() -> Int {
-        let difference: Int
-        if sliderValueRounded > self.target {
-          difference = sliderValueRounded - self.target
-        } else if self.target > sliderValueRounded {
-          difference = self.target - sliderValueRounded
-        } else {
-          difference = 0
-        }
-        
-        return 100 - difference
+        let maximumScore = 100
+        let difference = abs(sliderValueRounded - self.target)
+        return maximumScore - difference
     }
     
     func scoringMessage() -> String {
