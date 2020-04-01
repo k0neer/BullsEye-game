@@ -16,6 +16,7 @@ struct ContentView: View {
     //User interface views
     @State var alertIsVisible: Bool = false
     @State var sliderValue: Double = 50
+    @State var target: Int = Int.random(in: 1...100)
     
     //User interface content and layout
     var body: some View {
@@ -25,7 +26,7 @@ struct ContentView: View {
             //Target row
             HStack {
                 Text("Pull the bulls eye as close as you can to:")
-                Text("100")
+                Text("\(self.target)")
             }
             
             Spacer()
