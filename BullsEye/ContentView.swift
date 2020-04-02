@@ -22,7 +22,10 @@ struct ContentView: View {
     @State var round = 1
     
     var sliderValueRounded: Int {
-        Int(self.sliderValue.rounded())
+        Int(sliderValue.rounded())
+    }
+    var sliderTargetDifference: Int {
+        abs(sliderValueRounded - target)
     }
     
     //User interface content and layout
@@ -34,7 +37,7 @@ struct ContentView: View {
             //Target row
             HStack {
                 Text("Pull the bulls eye as close as you can to:")
-                Text("\(self.target)")
+                Text("\(target)")
             }
             
             Spacer()
@@ -42,7 +45,7 @@ struct ContentView: View {
             //Slider row
             HStack {
                 Text("1")
-                Slider(value: self.$sliderValue, in: 1...100)
+                Slider(value: $sliderValue, in: 1...100)
                 Text("100")
             }
             
@@ -55,13 +58,11 @@ struct ContentView: View {
             }) {
                 Text("Hit me!")
             }
-            .alert(isPresented: self.$alertIsVisible) {
-                Alert(title: Text("Hello there!"),
-                      message: Text(self.scoringMessage()),
+            .alert(isPresented: $alertIsVisible) {
+                Alert(title: Text(alertTitle()),
+                      message: Text(scoringMessage()),
                       dismissButton: .default(Text("Awesome!")) {
-                        self.score += self.pointsForCurrentRound()
-                        self.target = Int.random(in: 1...100)
-                        self.round += 1
+                        self.startNewRound()
                     }
                 )
             }
@@ -70,16 +71,18 @@ struct ContentView: View {
             
             //score row
             HStack {
-                Button(action: {}) {
+                Button(action: {
+                    self.startNewGame()
+                }) {
                     Text("Start Over")
                 }
                 Spacer()
                 Text("Score:")
-                Text("\(self.score)")
+                Text("\(score)")
                 
                 Spacer()
                 Text("Round:")
-                Text("\(self.round)")
+                Text("\(round)")
                 
                 Spacer()
                 Button(action: {}) {
@@ -93,14 +96,49 @@ struct ContentView: View {
     //Methods
     func pointsForCurrentRound() -> Int {
         let maximumScore = 100
-        let difference = abs(sliderValueRounded - self.target)
-        return maximumScore - difference
+        let points: Int
+        if sliderTargetDifference == 0 {
+            points = 200
+        } else if sliderTargetDifference == 1 {
+            points = 150
+        } else {
+            points = maximumScore - sliderTargetDifference
+        }
+        return points
     }
     
     func scoringMessage() -> String {
-        return  "The slider's value is \(self.sliderValueRounded).\n" +
-                "The target value is \(self.target).\n" +
-                "You scored \(self.pointsForCurrentRound()) points this round."
+        return  "The slider's value is \(sliderValueRounded).\n" +
+                "The target value is \(target).\n" +
+                "You scored \(pointsForCurrentRound()) points this round."
+    }
+    
+    func alertTitle() -> String {
+        let title: String
+        if sliderTargetDifference == 0 {
+            title = "Perfect!"
+        } else if sliderTargetDifference < 5 {
+            title = "You almost had it!"
+        } else if sliderTargetDifference <= 10 {
+            title = "Not bad."
+        } else {
+            title = "Are you even trying?"
+        }
+        return title
+    }
+    func startNewGame() {
+        score = 0
+        round = 1
+        resetSliderAndTarget()
+    }
+    func startNewRound() {
+        score += self.pointsForCurrentRound()
+        round += 1
+        resetSliderAndTarget()
+    }
+    func resetSliderAndTarget() {
+        sliderValue = 50
+        target = Int.random(in: 1...100)
     }
 }
 
