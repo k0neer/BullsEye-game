@@ -37,7 +37,13 @@ struct ContentView: View {
             //Target row
             HStack {
                 Text("Pull the bulls eye as close as you can to:")
+                    .font(Font.custom("Arial Rounded MT Bold", size: 18))
+                    .foregroundColor(.white)
+                    .shadow(color: .black, radius: 5, x: 2, y: 2)
                 Text("\(target)")
+                    .font(Font.custom("Arial Rounded MT Bold", size: 24))
+                    .foregroundColor(.yellow)
+                    .shadow(color: .black, radius: 5, x: 2, y: 2)
             }
             
             Spacer()
@@ -57,7 +63,11 @@ struct ContentView: View {
                 self.alertIsVisible = true
             }) {
                 Text("Hit me!")
+                    .font(Font.custom("Arial Rounded MT Bold", size: 18))
+                    .foregroundColor(.black)
             }
+            .background(Image("Button"))
+            .shadow(color: .black, radius: 5, x: 2, y: 2)
             .alert(isPresented: $alertIsVisible) {
                 Alert(title: Text(alertTitle()),
                       message: Text(scoringMessage()),
@@ -78,12 +88,22 @@ struct ContentView: View {
                 }
                 Spacer()
                 Text("Score:")
+                    .font(Font.custom("Arial Rounded MT Bold", size: 18))
+                    .foregroundColor(.white)
+                    .shadow(color: .black, radius: 5, x: 2, y: 2)
                 Text("\(score)")
-                
+                    .font(Font.custom("Arial Rounded MT Bold", size: 24))
+                    .foregroundColor(.yellow)
+                    .shadow(color: .black, radius: 5, x: 2, y: 2)
                 Spacer()
                 Text("Round:")
+                    .font(Font.custom("Arial Rounded MT Bold", size: 18))
+                    .foregroundColor(.white)
+                    .shadow(color: .black, radius: 5, x: 2, y: 2)
                 Text("\(round)")
-                
+                    .font(Font.custom("Arial Rounded MT Bold", size: 24))
+                    .foregroundColor(.yellow)
+                    .shadow(color: .black, radius: 5, x: 2, y: 2)
                 Spacer()
                 Button(action: {}) {
                     Text("Info")
@@ -94,6 +114,7 @@ struct ContentView: View {
         .onAppear() {
             self.startNewGame()
         }
+        .background(Image("Background"))
     }
     
     //Methods
